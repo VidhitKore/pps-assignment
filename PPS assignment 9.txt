@@ -1,0 +1,39 @@
+#include <stdio.h>
+
+#define MAX_NAME 100
+
+int main() {
+    char sourceName[MAX_NAME], destName[MAX_NAME];
+    FILE *srcFile, *destFile;
+    int ch;
+
+    printf("Enter source filename: ");
+    scanf("%99s", sourceName);
+
+    printf("Enter destination filename: ");
+    scanf("%99s", destName);
+
+    srcFile = fopen(sourceName, "r");
+    if (srcFile == NULL) {
+        printf("Error: Could not open source file '%s'.\n", sourceName);
+        return 1;
+    }
+
+    destFile = fopen(destName, "w");
+    if (destFile == NULL) {
+        printf("Error: Could not open or create destination file '%s'.\n", destName);
+        fclose(srcFile);
+        return 1;
+    }
+
+    while ((ch = fgetc(srcFile)) != EOF) {
+        fputc(ch, destFile);
+    }
+
+    printf("File copied successfully from '%s' to '%s'.\n", sourceName, destName);
+
+    fclose(srcFile);
+    fclose(destFile);
+
+    return 0;
+}

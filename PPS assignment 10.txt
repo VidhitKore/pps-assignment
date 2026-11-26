@@ -1,0 +1,68 @@
+#include <stdio.h>
+
+int isLeapYear(int year) {
+    return (year % 400 == 0) || (year % 4 == 0 && year % 100 != 0);
+}
+
+// Returns day of week for Jan 1 of 'year': 0 = Sunday, 1 = Monday, ..., 6 = Saturday
+int getFirstDayOfYear(int year) {
+    int y = year - 1;
+    int day = (y + y / 4 - y / 100 + y / 400 + 1) % 7;
+    return (day + 7) % 7;
+}
+
+int main() {
+    int year, month, day, currentDay;
+
+    const char *months[12] = {
+        "January", "February", "March", "April",
+        "May", "June", "July", "August",
+        "September", "October", "November", "December"
+    };
+
+    int daysInMonth[12] = {
+        31, 28, 31, 30, 31, 30,
+        31, 31, 30, 31, 30, 31
+    };
+
+    printf("Enter year: ");
+    scanf("%d", &year);
+
+    if (year < 1) {
+        printf("Please enter a valid positive year.\n");
+        return 1;
+    }
+
+    if (isLeapYear(year)) {
+        daysInMonth[1] = 29;
+    }
+
+    currentDay = getFirstDayOfYear(year);
+
+    printf("\n==================== CALENDAR - %d ====================\n", year);
+
+    for (month = 0; month < 12; month++) {
+        printf("\n------------ %s %d ------------\n", months[month], year);
+        printf("Sun  Mon  Tue  Wed  Thu  Fri  Sat\n");
+
+        // Leading spaces for the first day of the month
+        for (day = 0; day < currentDay; day++) {
+            printf("     ");
+        }
+
+        // Print dates of the month
+        for (day = 1; day <= daysInMonth[month]; day++) {
+            printf("%3d  ", day);
+            currentDay = (currentDay + 1) % 7;
+            if (currentDay == 0) {
+                printf("\n");
+            }
+        }
+
+        if (currentDay != 0) {
+            printf("\n");
+        }
+    }
+
+    return 0;
+}
